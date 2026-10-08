@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { ChevronsRightLeft, EyeOff, Pin, PinOff, Plus } from 'lucide-react';
+import { ChevronsRightLeft, Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { ProjectDetail } from '@/lib/api/endpoints/projects';
 import type { BoardIssue } from '@/lib/api/endpoints/issues';
@@ -15,7 +15,6 @@ import { GroupDot } from '../shared/GroupDot';
 import { BoardCard } from './BoardCard';
 import { CardDropSlot } from './CardDropSlot';
 import { DropLine } from '../shared/DropLine';
-import { SelectAllToggle } from './SelectAllToggle';
 import { useIsOverContainer } from '../../hooks/useIsOverContainer';
 import { useIncomingCount } from '../../hooks/useIncomingCount';
 import { COLUMN_WIDTH, PINNED_COLUMN } from '../../utils/kanban';
@@ -131,21 +130,6 @@ export function BoardColumn({
         <div className="flex items-center gap-1">
           {!readOnly && (
             <>
-              <SelectAllToggle ids={issues.map((i) => i.id)} />
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="hidden size-6 text-muted-foreground md:inline-flex"
-                    onClick={onTogglePin}
-                    aria-label={pinned ? t('unpin') : t('pin')}
-                  >
-                    {pinned ? <PinOff /> : <Pin />}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>{pinned ? t('unpin') : t('pin')}</TooltipContent>
-              </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -159,20 +143,6 @@ export function BoardColumn({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>{t('collapse')}</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="size-6 text-muted-foreground"
-                    onClick={onHide}
-                    aria-label={t('hide')}
-                  >
-                    <EyeOff />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>{t('hide')}</TooltipContent>
               </Tooltip>
             </>
           )}
