@@ -14,6 +14,7 @@ import ProjectSwitcher from '@/components/layout/ProjectSwitcher';
 import SidebarMainNav from '@/components/layout/SidebarMainNav';
 import SidebarSettingsNav from '@/components/layout/SidebarSettingsNav';
 import SidebarBrandFooter from '@/components/brand/SidebarBrandFooter';
+import SidebarPinControl from '@/components/layout/SidebarPinControl';
 
 // The app sidebar. It has two modes driven by the route: the main work
 // navigation, and the project settings navigation reached through the "Project
@@ -43,11 +44,17 @@ export default function AppSidebar({
   return (
     <Sidebar collapsible="icon" side={side}>
       <SidebarHeader>
-        <ProjectSwitcher
-          projects={projects}
-          currentProjectKey={currentProjectKey}
-          onSelectProject={onSelectProject}
-        />
+        <div className="flex items-center gap-1">
+          <div className="min-w-0 flex-1">
+            <ProjectSwitcher
+              projects={projects}
+              currentProjectKey={currentProjectKey}
+              onSelectProject={onSelectProject}
+            />
+          </div>
+          {/* FORK (APPLANO): fixar/soltar o menu (auto-fecha em 60s). */}
+          <SidebarPinControl />
+        </div>
       </SidebarHeader>
 
       <SidebarContent>
