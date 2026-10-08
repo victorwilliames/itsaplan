@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import ItsAPlanMark from '@/components/brand/ItsAPlanMark';
 import ReleaseHistory from '@/features/whats-new/components/ReleaseHistory';
 import { useSession } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
@@ -13,6 +12,9 @@ import { useAppVersionQuery, useUpdateStatusQuery } from '@/services/updates.ser
 // The instance owner also sees whether a newer release is published and opens the
 // release notes from here — they are the one who upgrades the instance, so the
 // check is theirs alone (GET /god/updates). Everyone else sees the version only.
+//
+// FORK (APPLANO): rodapé simplificado — só a versão centralizada, sem logo e sem
+// o nome (já tem em cima). (fork-only)
 export default function SidebarBrandFooter() {
   const { data: session } = useSession();
   // The session store can already be filled by the time React hydrates, while the
@@ -31,31 +33,26 @@ export default function SidebarBrandFooter() {
   const newerVersion = status?.updateAvailable ? status.latestVersion : null;
 
   const layout =
-    'flex w-full items-center gap-2.5 px-2 pt-2 pb-1.5 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0';
+    'flex w-full items-center justify-center gap-1.5 px-2 pt-2 pb-1.5 group-data-[collapsible=icon]:px-0';
 
   const content = (
     <>
-      <ItsAPlanMark className="size-9 shrink-0 text-sidebar-foreground" />
-      <div className="grid text-left leading-none group-data-[collapsible=icon]:hidden">
-        <span className="text-base font-semibold tracking-tight text-sidebar-foreground">
-          It&apos;s a Plan
+      {newerVersion ? (
+        <span className="flex items-center gap-1.5 text-[10px] font-medium tracking-wider text-primary uppercase">
+          {/* A pulsing ring around the dot, so the update is noticed in a footer
+              nobody looks at. */}
+          <span className="relative flex size-1.5" aria-hidden>
+            <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500 opacity-75" />
+            <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
+          </span>
+          {`v${newerVersion} available`}
         </span>
-        {newerVersion ? (
-          <span className="mt-1 flex items-center gap-1.5 text-[10px] font-medium tracking-wider text-primary uppercase">
-            {/* A pulsing ring around the dot, so the update is noticed in a footer
-                nobody looks at. */}
-            <span className="relative flex size-1.5" aria-hidden>
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500 opacity-75" />
-              <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
-            </span>
-            {`v${newerVersion} available`}
-          </span>
-        ) : (
-          <span className="mt-1 text-[10px] font-medium tracking-wider text-muted-foreground uppercase">
-            {version ? `v${version}` : 'Self-hosted'}
-          </span>
-        )}
-      </div>
+      ) : (
+        <span className="flex items-center gap-1.5 text-[10px] font-medium tracking-wider text-muted-foreground uppercase">
+          <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" aria-hidden />
+          {version ? `v${version}` : 'Self-hosted'}
+        </span>
+      )}
     </>
   );
 
