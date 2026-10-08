@@ -220,10 +220,8 @@ export default function FlatBoard({
               onMoveIssue={moveIssue}
               onOpenIssue={onOpenIssue}
               onAddIssue={() => addIssueTo(group)}
-              onHide={() => setHidden(group.key, true)}
               onCollapse={() => setCollapsed(group.key, true)}
               pinned={group === pinnedGroup}
-              onTogglePin={() => togglePin(group.key)}
               readOnly={readOnly}
             />
           ),

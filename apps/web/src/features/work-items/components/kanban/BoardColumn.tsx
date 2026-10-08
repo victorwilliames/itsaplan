@@ -41,10 +41,8 @@ export function BoardColumn({
   onMoveIssue,
   onOpenIssue,
   onAddIssue,
-  onHide,
   onCollapse,
   pinned,
-  onTogglePin,
   wip,
   filtered,
   boardIssues,
@@ -63,10 +61,8 @@ export function BoardColumn({
   onMoveIssue: (issueIds: number[], group: IssueGroup, index: number) => void;
   onOpenIssue: (id: number) => void;
   onAddIssue: () => void;
-  onHide: () => void;
   onCollapse: () => void;
   pinned: boolean;
-  onTogglePin: () => void;
   // The column's WIP limit. It is null when the column has no limit, and null when
   // the board is not grouped by status. `filtered` says whether the cards shown are
   // only part of the column.
