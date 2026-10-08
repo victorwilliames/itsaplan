@@ -25,7 +25,9 @@ import FilterBar from '@/components/layout/FilterBar';
 import DisplayPopover from '@/components/layout/DisplayPopover';
 import { IssueLinksProvider } from './context/useIssueLinks';
 import { SubtasksProvider } from './context/useSubtasks';
+import { SelectionProvider } from './context/useSelection';
 import KanbanBoard from './components/kanban/KanbanBoard';
+import { BulkActionBar } from './components/kanban/BulkActionBar';
 import TableView from './components/table/TableView';
 import TimelineView from './components/timeline/TimelineView';
 import CalendarView from './components/calendar/CalendarView';
@@ -60,6 +62,9 @@ export default function WorkItemsPage() {
   });
 
   if (!project || !filteredProject) return null;
+
+  // Narrowed for the view render functions below (the hook return type is nullable).
+  const board = filteredProject;
 
   // Saving persists the view: editing an existing one is a views edit, a brand-new
   // one is a views create. Filtering/display stay available to everyone (transient,
@@ -132,10 +137,13 @@ export default function WorkItemsPage() {
     switch (editor.view) {
       case 'table':
         return (
-          <TableView
-            {...viewProps}
-            widthScope={editor.activeViewId ? `view:${editor.activeViewId}` : 'all'}
-          />
+          <SelectionProvider validIds={new Set(board.issues.map((i) => i.id))}>
+            <TableView
+              {...viewProps}
+              widthScope={editor.activeViewId ? `view:${editor.activeViewId}` : 'all'}
+            />
+            <BulkActionBar project={board} />
+          </SelectionProvider>
         );
       case 'timeline':
         return (

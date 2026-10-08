@@ -73,6 +73,7 @@ export default function TableView({
   });
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const rowIds = items.filter((it) => it.kind === 'row').map((it) => it.issue.id);
   const virtualizer = useVirtualizer({
     count: items.length,
     getScrollElement: () => scrollRef.current,
@@ -152,6 +153,7 @@ export default function TableView({
           columns={columns}
           gridTemplate={gridTemplate}
           minWidth={minWidth}
+          ids={rowIds}
           onResize={setWidth}
           onResizeEnd={persistWidths}
         />

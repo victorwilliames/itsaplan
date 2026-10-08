@@ -7,11 +7,13 @@ import { useIsPhone } from '@/hooks/useIsPhone';
 import { usePermissions } from '@/hooks/usePermissions';
 import { isBlocked } from '@/utils/issueLinks';
 import { cn } from '@/lib/utils';
+import { Checkbox } from '@/components/ui/checkbox';
 import IssueContextMenu from '@/features/issue/components/actions/IssueContextMenu';
 import { DropLine } from '../shared/DropLine';
 import { IssueIdentifier } from '../shared/IssueIdentifier';
 import { SubtaskProgress } from '../shared/SubtaskProgress';
 import { useSubtaskFold } from '../../context/useSubtasks';
+import { useSelection } from '../../context/useSelection';
 import { columnKey, type OrderedColumn } from '../../utils/table';
 import { TableBuiltinCell } from './TableBuiltinCell';
 import { TableCustomCell } from './TableCustomCell';
@@ -57,6 +59,8 @@ export function TableRow({
   // issue edit).
   const { can } = usePermissions();
   const subtasks = useSubtaskFold();
+  const selection = useSelection();
+  const selected = selection.isSelected(issue.id);
   const {
     setNodeRef: dragRef,
     attributes,
@@ -95,11 +99,19 @@ export function TableRow({
           alignTop ? 'items-start' : 'items-center',
           indented ? 'pl-9' : 'pl-4',
           isDragging && 'opacity-40',
+          selected && 'bg-primary/10',
         )}
         style={{ gridTemplateColumns: gridTemplate }}
       >
         {showDropLine && <DropLine className="top-0" />}
         <div className="flex min-w-0 items-center gap-2">
+          <Checkbox
+            checked={selected}
+            onCheckedChange={() => selection.toggle(issue.id)}
+            onClick={(e) => e.stopPropagation()}
+            aria-label={`Select ${issue.title}`}
+            className="shrink-0"
+          />
           {showId && (
             <IssueIdentifier
               issue={issue}
