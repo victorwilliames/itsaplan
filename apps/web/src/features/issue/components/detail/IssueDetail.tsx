@@ -36,18 +36,19 @@ export default function IssueDetail({
     <div
       // Above the floating chat button (z-40), which sits in the corner the panel's
       // last-comment bubble uses.
-      className="pointer-events-none fixed inset-0 z-50 flex"
+      className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8"
     >
+      <div aria-hidden className="pointer-events-auto absolute inset-0 bg-black/60" />
       {/* No padding at the top: the sticky header carries it, so it can sit flush
           against the panel edge with nothing showing above it. */}
       <div
         ref={panelRef}
-        className="pointer-events-auto ms-auto flex h-full w-full flex-col overflow-y-auto border-s bg-card px-5 pt-0 pb-5 sm:w-[720px] sm:max-w-[92vw] sm:px-8"
+        className="pointer-events-auto relative flex max-h-full w-full flex-col overflow-y-auto rounded-xl border bg-card px-5 pt-0 pb-5 sm:w-[720px] sm:max-w-[92vw] sm:px-8"
       >
         {/* The header stays at the top while the body scrolls under it. Negative
             margins cancel the panel padding so its translucent, blurred backdrop
             spans the full panel width. */}
-        <div className="sticky top-0 z-10 -mx-5 mb-3 flex items-center justify-between gap-2 bg-card/85 px-5 pt-5 pb-3 backdrop-blur-md sm:-mx-8 sm:px-8">
+        <div className="sticky top-0 z-10 -mx-5 mb-3 flex items-center justify-between gap-2 rounded-t-xl bg-card/85 px-5 pt-5 pb-3 backdrop-blur-md sm:-mx-8 sm:px-8">
           <span className="text-xs text-muted-foreground">{issue?.identifier ?? ''}</span>
           <div className="flex items-center gap-1">
             {issue && (
