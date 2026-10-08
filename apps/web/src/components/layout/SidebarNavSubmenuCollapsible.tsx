@@ -30,7 +30,6 @@ export default function SidebarNavSubmenuCollapsible({
       defaultOpen={defaultOpen ?? items.some((i) => i.active)}
       className="group/collapsible"
     >
-      {' '}
       <SidebarMenuItem>
         <CollapsibleTrigger asChild>
           <SidebarMenuButton isActive={items.some((i) => i.active)}>
