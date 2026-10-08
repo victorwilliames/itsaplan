@@ -28,10 +28,7 @@ export default function IssueTypesPresetDialog({
   const [busy, setBusy] = useState(false);
   const applyPreset = useApplyIssueTypePreset(projectKey);
 
-  const existing = useMemo(
-    () => new Set(types.map((type) => type.name.toLowerCase())),
-    [types],
-  );
+  const existing = useMemo(() => new Set(types.map((type) => type.name.toLowerCase())), [types]);
   const missing = useMemo(() => {
     const selected = PRESETS.find((p) => p.key === preset);
     return selected?.types.filter((type) => !existing.has(type.name.toLowerCase())) ?? [];
@@ -56,7 +53,9 @@ export default function IssueTypesPresetDialog({
     <Modal title={t('presetTitle')} onClose={onClose}>
       <div className="space-y-4">
         <NewProjectPreset value={preset} onChange={setPreset} hideDefaultNote />
-        <p className="text-xs text-muted-foreground">{t('presetSummary', { count: missing.length })}</p>
+        <p className="text-xs text-muted-foreground">
+          {t('presetSummary', { count: missing.length })}
+        </p>
         <div className="flex items-center justify-end gap-2">
           <Button variant="ghost" onClick={onClose} disabled={busy}>
             {tCommon('cancel')}

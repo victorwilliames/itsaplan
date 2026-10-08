@@ -58,7 +58,12 @@ import {
   updateIssueTemplate,
   deleteIssueTemplate,
 } from '@/lib/api/endpoints/issueTemplates';
-import { createIssueType, updateIssueType, deleteIssueType, applyIssueTypePreset } from '@/lib/api/endpoints/issueTypes';
+import {
+  createIssueType,
+  updateIssueType,
+  deleteIssueType,
+  applyIssueTypePreset,
+} from '@/lib/api/endpoints/issueTypes';
 import {
   createLabel,
   updateLabel,

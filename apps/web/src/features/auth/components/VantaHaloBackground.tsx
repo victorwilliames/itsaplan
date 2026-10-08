@@ -37,11 +37,5 @@ export default function VantaHaloBackground() {
     };
   }, []);
 
-  return (
-    <div
-      ref={ref}
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-0"
-    />
-  );
+  return <div ref={ref} aria-hidden="true" className="pointer-events-none absolute inset-0" />;
 }

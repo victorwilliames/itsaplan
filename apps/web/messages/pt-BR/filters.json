@@ -30,8 +30,8 @@
   "fields": {
     "status": "Estado",
     "statusType": "Tipo de estado",
-    "assignee": "Responsável",
-    "delegate": "Delegado",
+    "assignee": "Responsável (Humano)",
+    "delegate": "Delegado (Agente IA)",
     "priority": "Prioridade",
     "type": "Tipo",
     "initiative": "Iniciativa",

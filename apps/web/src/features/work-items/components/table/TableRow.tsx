@@ -119,7 +119,7 @@ export function TableRow({
               onOpenParent={onOpenIssue}
             />
           )}
-          <span dir="auto" className="truncate text-foreground">
+          <span dir="auto" className="min-w-0 flex-1 truncate text-foreground">
             {issue.title}
           </span>
           <SubtaskProgress

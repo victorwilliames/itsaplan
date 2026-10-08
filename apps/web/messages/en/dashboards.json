@@ -80,8 +80,8 @@
       "status": "State",
       "priority": "Priority",
       "type": "Type",
-      "assignee": "Assignee",
-      "delegate": "Delegate"
+      "assignee": "Assignee (Human)",
+      "delegate": "Delegate (AI Agent)"
     },
     "caption": {
       "status": "By state",

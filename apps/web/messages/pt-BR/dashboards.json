@@ -80,8 +80,8 @@
       "status": "Estado",
       "priority": "Prioridade",
       "type": "Tipo",
-      "assignee": "Responsável",
-      "delegate": "Delegado"
+      "assignee": "Responsável (Humano)",
+      "delegate": "Delegado (Agente IA)"
     },
     "caption": {
       "status": "Por estado",

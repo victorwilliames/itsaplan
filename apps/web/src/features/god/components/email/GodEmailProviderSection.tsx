@@ -40,7 +40,7 @@ export default function GodEmailProviderSection({ form }: { form: GodEmailForm }
             id="email-from"
             value={form.from}
             onChange={(e) => form.setFrom(e.target.value)}
-            placeholder={"PLANW <noreply@example.com>"} // FORK (APPLANO): rebranded
+            placeholder={'PLANW <noreply@example.com>'} // FORK (APPLANO): rebranded
           />
           <p className="text-xs text-muted-foreground">{t('fromHint')}</p>
         </div>

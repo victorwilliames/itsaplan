@@ -30,8 +30,8 @@
   "fields": {
     "status": "State",
     "statusType": "State type",
-    "assignee": "Assignee",
-    "delegate": "Delegate",
+    "assignee": "Assignee (Human)",
+    "delegate": "Delegate (AI Agent)",
     "priority": "Priority",
     "type": "Type",
     "initiative": "Initiative",

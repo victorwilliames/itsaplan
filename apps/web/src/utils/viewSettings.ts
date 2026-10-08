@@ -206,12 +206,15 @@ const DEFAULT_PROPERTIES: Record<WorkItemsView, DisplayProperty[]> = {
 };
 
 export function defaultViewSettings(view: WorkItemsView): ViewSettings {
-  const group: GroupField = view === 'calendar' ? 'none' : 'status';
+  const group: GroupField = view === 'calendar' || view === 'table' ? 'none' : 'status';
+  // FORK (APPLANO): table default has subtasks as nested rows, not separate (fork-only).
+  const separateSubtasks = view === 'table' ? false : COMMON.separateSubtasks;
   return {
     ...COMMON,
     sort: { ...DEFAULT_SORT },
     group,
     subgroup: 'none',
+    separateSubtasks,
     properties: [...DEFAULT_PROPERTIES[view]],
   };
 }

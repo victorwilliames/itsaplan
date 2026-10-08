@@ -76,7 +76,7 @@ export const app = new Elysia()
       },
       documentation: {
         info: {
-          title: "PLANW API", // FORK (APPLANO): rebranded
+          title: 'PLANW API', // FORK (APPLANO): rebranded
           version: pkg.version,
           description: apiDescription,
         },
@@ -307,7 +307,8 @@ export const app = new Elysia()
     },
   )
   // Root doubles as the liveness/health endpoint.
-  .get('/', () => ({ name: 'PLANW api', status: 'ok' }), { // FORK (APPLANO): rebranded
+  .get('/', () => ({ name: 'PLANW api', status: 'ok' }), {
+    // FORK (APPLANO): rebranded
     detail: {
       tags: ['System'],
       summary: 'Check that the api is up',
