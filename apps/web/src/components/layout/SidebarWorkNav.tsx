@@ -2,26 +2,36 @@ import { usePathname } from 'next/navigation';
 import { useShellRoute } from '@/hooks/useShellRoute';
 import { useTranslations } from 'next-intl';
 import {
+  Bell,
   BookOpenText,
   ChevronDown,
   Inbox,
   LayoutDashboard,
   ListTodo,
   RefreshCw,
+  Settings,
   SquareKanban,
   StickyNote,
   Target,
+  Users,
 } from 'lucide-react';
 import {
+  aiAgentsPath,
+  aiTeamPath,
   cyclesPath,
   dashboardsPath,
   documentsPath,
   inboxPath,
   initiativesPath,
+  membersPath,
   notesPath,
+  notificationsPath,
   projectPath,
   viewPath,
 } from '@/utils/paths';
+import { AI_AGENTS_SECTION, AI_TEAM_SECTIONS } from '@/utils/settingsSections';
+import { useSettingsSectionText } from '@/hooks/useSectionLabels';
+import { useSettingsNavGroups } from '@/hooks/useSettingsNavGroups';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useProjectFeatures } from '@/hooks/useProjectFeatures';
 import { useInboxUnread } from '@/hooks/useInboxUnread';
@@ -43,8 +53,9 @@ import SidebarNavSubmenu, {
 //
 // FORK (APPLANO): reorganizado a pedido do dono —
 // - "Tarefas" agrupa o quadro, as views favoritas, Epics e Ciclos (fechado por padrão);
-// - "Ver mais" agrupa Documentos e Notas;
+// - "Ver mais" agrupa TUDO o resto (Documentos, Notas, Time de IA, Configuração);
 // - rótulos em PT-BR direto no código (fork-only).
+// SidebarAiTeamNav e SidebarConfigNav não são mais renderizados (ver SidebarMainNav).
 export default function SidebarWorkNav({
   projectKey,
   projectId,
@@ -53,14 +64,16 @@ export default function SidebarWorkNav({
   projectId: number | null;
 }) {
   const t = useTranslations('nav');
+  const sectionText = useSettingsSectionText();
   const pathname = usePathname();
   const routeSub = useShellRoute().sub;
-  const { can } = usePermissions();
+  const { can, isMember } = usePermissions();
   const features = useProjectFeatures();
   const disabled = !projectKey;
   const { data: inboxUnread } = useInboxUnread(projectKey, projectId);
   const { data: views } = useViewsQuery(projectKey);
   const favorites = views?.filter((v) => v.favorite) ?? [];
+  const { firstHref } = useSettingsNavGroups(projectKey);
 
   // "Work items" is the default view: active on the project root and any segment
   // that is not one of the other top-level destinations.
@@ -114,7 +127,8 @@ export default function SidebarWorkNav({
     }
   }
 
-  // "Ver mais": o resto, fora do caminho diário.
+  // "Ver mais": o resto, fora do caminho diário — documentos, notas,
+  // time de IA e configuração.
   const verMaisItems: SidebarNavSubmenuItem[] = [];
   if (projectKey) {
     if (features.documents && can('documents', 'read')) {
@@ -133,6 +147,51 @@ export default function SidebarWorkNav({
         icon: StickyNote,
         label: t('notes'),
         active: pathname.includes('/notes'),
+      });
+    }
+    for (const s of AI_TEAM_SECTIONS.filter((x) => can(x.resource, 'read'))) {
+      verMaisItems.push({
+        key: `ai-${s.slug}`,
+        href: aiTeamPath(projectKey, s.slug),
+        icon: s.icon,
+        label: sectionText(s.slug).label,
+        active: pathname.endsWith(`/agents/${s.slug}`),
+      });
+    }
+    if (can(AI_AGENTS_SECTION.resource, 'read')) {
+      verMaisItems.push({
+        key: 'ai-agents',
+        href: aiAgentsPath(projectKey),
+        icon: AI_AGENTS_SECTION.icon,
+        label: sectionText(AI_AGENTS_SECTION.slug).label,
+        active: pathname.endsWith('/agents'),
+      });
+    }
+    if (can('members_manage', 'read')) {
+      verMaisItems.push({
+        key: 'members',
+        href: membersPath(projectKey),
+        icon: Users,
+        label: t('members'),
+        active: pathname.includes('/members'),
+      });
+    }
+    if (isMember) {
+      verMaisItems.push({
+        key: 'notifications',
+        href: notificationsPath(projectKey),
+        icon: Bell,
+        label: t('notifications'),
+        active: pathname === notificationsPath(projectKey),
+      });
+    }
+    if (firstHref) {
+      verMaisItems.push({
+        key: 'project-settings',
+        href: firstHref,
+        icon: Settings,
+        label: t('projectSettings'),
+        active: false,
       });
     }
   }

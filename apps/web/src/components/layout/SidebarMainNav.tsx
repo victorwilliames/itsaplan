@@ -1,9 +1,8 @@
-import SidebarAiTeamNav from '@/components/layout/SidebarAiTeamNav';
-import SidebarConfigNav from '@/components/layout/SidebarConfigNav';
 import SidebarWorkNav from '@/components/layout/SidebarWorkNav';
 
-// The main sidebar body: the work navigation, the AI Team group, then the
-// Configuration group.
+// The main sidebar body: the work navigation only.
+// FORK (APPLANO): SidebarAiTeamNav e SidebarConfigNav foram absorvidos pelo
+// "Ver mais" dentro de SidebarWorkNav — o menu fica limpo.
 export default function SidebarMainNav({
   projectKey,
   projectId,
@@ -11,11 +10,5 @@ export default function SidebarMainNav({
   projectKey: string | null;
   projectId: number | null;
 }) {
-  return (
-    <>
-      <SidebarWorkNav projectKey={projectKey} projectId={projectId} />
-      <SidebarAiTeamNav projectKey={projectKey} />
-      <SidebarConfigNav projectKey={projectKey} />
-    </>
-  );
+  return <SidebarWorkNav projectKey={projectKey} projectId={projectId} />;
 }
