@@ -3,8 +3,10 @@ import { useShellRoute } from '@/hooks/useShellRoute';
 import { useTranslations } from 'next-intl';
 import {
   BookOpenText,
+  ChevronDown,
   Inbox,
   LayoutDashboard,
+  ListTodo,
   RefreshCw,
   SquareKanban,
   StickyNote,
@@ -25,12 +27,24 @@ import { useProjectFeatures } from '@/hooks/useProjectFeatures';
 import { useInboxUnread } from '@/hooks/useInboxUnread';
 import { useViewsQuery } from '@/services/views.service';
 import { viewIcon } from '@/utils/viewIcons';
-import { SidebarGroup, SidebarGroupContent, SidebarMenu } from '@/components/ui/sidebar';
+import {
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarSeparator,
+} from '@/components/ui/sidebar';
 import SidebarNavItem from '@/components/layout/SidebarNavItem';
-import SidebarNavSubmenu from '@/components/layout/SidebarNavSubmenu';
+import SidebarNavSubmenu, {
+  type SidebarNavSubmenuItem,
+} from '@/components/layout/SidebarNavSubmenu';
 
 // The top sidebar group. An entry appears only when its project feature is on and
 // the user may read the section.
+//
+// FORK (APPLANO): reorganizado a pedido do dono —
+// - "Tarefas" agrupa o quadro, as views favoritas, Epics e Ciclos (fechado por padrão);
+// - "Ver mais" agrupa Documentos e Notas;
+// - rótulos em PT-BR direto no código (fork-only).
 export default function SidebarWorkNav({
   projectKey,
   projectId,
@@ -56,29 +70,72 @@ export default function SidebarWorkNav({
       pathname.startsWith(`${projectPath(projectKey)}/view`) ||
       routeSub === 'issue');
 
-  // With favorites, Work items becomes a sub-list: the unfiltered board plus one
-  // entry per favorite view.
-  const workItemsSubmenu =
-    projectKey && favorites.length > 0
-      ? [
-          {
-            key: 'all',
-            href: projectPath(projectKey),
-            icon: SquareKanban,
-            label: t('allWorkItems'),
-            // Also the entry for a saved view that is not a favorite: it has no
-            // row of its own, and the group would otherwise show nothing active.
-            active: onWorkItems && !favorites.some((v) => pathname === viewPath(projectKey, v.id)),
-          },
-          ...favorites.map((v) => ({
-            key: String(v.id),
-            href: viewPath(projectKey, v.id),
-            icon: viewIcon(v.icon),
-            label: v.name,
-            active: pathname === viewPath(projectKey, v.id),
-          })),
-        ]
-      : null;
+  const onInitiatives = !!projectKey && pathname.includes('/initiatives');
+  const onCycles = !!projectKey && pathname.includes('/cycles');
+  const showInitiatives = features.initiatives && can('initiatives', 'read');
+  const showCycles = features.cycles && can('cycles', 'read');
+
+  // "Tarefas": o quadro, as favoritas, e os agrupamentos (Epics, Ciclos).
+  const tarefasItems: SidebarNavSubmenuItem[] = [];
+  if (projectKey) {
+    tarefasItems.push({
+      key: 'all',
+      href: projectPath(projectKey),
+      icon: SquareKanban,
+      label: 'Todas as tarefas',
+      active: onWorkItems && !favorites.some((v) => pathname === viewPath(projectKey, v.id)),
+    });
+    for (const v of favorites) {
+      tarefasItems.push({
+        key: String(v.id),
+        href: viewPath(projectKey, v.id),
+        icon: viewIcon(v.icon),
+        label: v.name,
+        active: pathname === viewPath(projectKey, v.id),
+      });
+    }
+    if (showInitiatives) {
+      tarefasItems.push({
+        key: 'epics',
+        href: initiativesPath(projectKey),
+        icon: Target,
+        label: 'Epics (SubProjetos)',
+        active: onInitiatives,
+      });
+    }
+    if (showCycles) {
+      tarefasItems.push({
+        key: 'cycles',
+        href: cyclesPath(projectKey),
+        icon: RefreshCw,
+        label: 'Ciclos (Sprints)',
+        active: onCycles,
+      });
+    }
+  }
+
+  // "Ver mais": o resto, fora do caminho diário.
+  const verMaisItems: SidebarNavSubmenuItem[] = [];
+  if (projectKey) {
+    if (features.documents && can('documents', 'read')) {
+      verMaisItems.push({
+        key: 'documents',
+        href: documentsPath(projectKey),
+        icon: BookOpenText,
+        label: t('documents'),
+        active: pathname.includes('/docs'),
+      });
+    }
+    if (features.notes && can('note_boards', 'read')) {
+      verMaisItems.push({
+        key: 'notes',
+        href: notesPath(projectKey),
+        icon: StickyNote,
+        label: t('notes'),
+        active: pathname.includes('/notes'),
+      });
+    }
+  }
 
   return (
     <SidebarGroup>
@@ -101,56 +158,24 @@ export default function SidebarWorkNav({
               disabled={disabled}
             />
           )}
-          {workItemsSubmenu ? (
+          {!disabled && tarefasItems.length > 0 && (
             <SidebarNavSubmenu
-              icon={SquareKanban}
-              label={t('workItems')}
-              items={workItemsSubmenu}
-            />
-          ) : (
-            <SidebarNavItem
-              href={projectKey ? projectPath(projectKey) : '#'}
-              icon={SquareKanban}
-              label={t('workItems')}
-              active={onWorkItems}
-              disabled={disabled}
+              icon={ListTodo}
+              label="Tarefas"
+              items={tarefasItems}
+              defaultOpen={false}
             />
           )}
-          {features.initiatives && can('initiatives', 'read') && (
-            <SidebarNavItem
-              href={projectKey ? initiativesPath(projectKey) : '#'}
-              icon={Target}
-              label={t('initiatives')}
-              active={pathname.includes('/initiatives')}
-              disabled={disabled}
-            />
-          )}
-          {features.cycles && can('cycles', 'read') && (
-            <SidebarNavItem
-              href={projectKey ? cyclesPath(projectKey) : '#'}
-              icon={RefreshCw}
-              label={t('cycles')}
-              active={pathname.includes('/cycles')}
-              disabled={disabled}
-            />
-          )}
-          {features.documents && can('documents', 'read') && (
-            <SidebarNavItem
-              href={projectKey ? documentsPath(projectKey) : '#'}
-              icon={BookOpenText}
-              label={t('documents')}
-              active={pathname.includes('/docs')}
-              disabled={disabled}
-            />
-          )}
-          {features.notes && can('note_boards', 'read') && (
-            <SidebarNavItem
-              href={projectKey ? notesPath(projectKey) : '#'}
-              icon={StickyNote}
-              label={t('notes')}
-              active={pathname.includes('/notes')}
-              disabled={disabled}
-            />
+          {verMaisItems.length > 0 && (
+            <>
+              <SidebarSeparator />
+              <SidebarNavSubmenu
+                icon={ChevronDown}
+                label="Ver mais"
+                items={verMaisItems}
+                defaultOpen={false}
+              />
+            </>
           )}
         </SidebarMenu>
       </SidebarGroupContent>

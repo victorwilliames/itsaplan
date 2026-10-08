@@ -11,18 +11,26 @@ import {
 import type { SidebarNavSubmenuItem } from '@/components/layout/SidebarNavSubmenu';
 
 // The expanded form of SidebarNavSubmenu. It starts open when the current page is
-// one of its items, so a reload keeps the sub-list visible.
+// one of its items, so a reload keeps the sub-list visible — unless defaultOpen
+// is given, which forces the initial state.
 export default function SidebarNavSubmenuCollapsible({
   icon: Icon,
   label,
   items,
+  defaultOpen,
 }: {
   icon: LucideIcon;
   label: string;
   items: SidebarNavSubmenuItem[];
+  defaultOpen?: boolean;
 }) {
   return (
-    <Collapsible asChild defaultOpen={items.some((i) => i.active)} className="group/collapsible">
+    <Collapsible
+      asChild
+      defaultOpen={defaultOpen ?? items.some((i) => i.active)}
+      className="group/collapsible"
+    >
+      {' '}
       <SidebarMenuItem>
         <CollapsibleTrigger asChild>
           <SidebarMenuButton isActive={items.some((i) => i.active)}>

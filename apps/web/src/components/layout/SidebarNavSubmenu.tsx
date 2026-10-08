@@ -20,15 +20,25 @@ export default function SidebarNavSubmenu({
   icon,
   label,
   items,
+  defaultOpen,
 }: {
   icon: LucideIcon;
   label: string;
   items: SidebarNavSubmenuItem[];
+  // FORK (APPLANO): permite forçar o grupo a começar fechado.
+  defaultOpen?: boolean;
 }) {
   const { state, isMobile } = useSidebar();
 
   if (state === 'collapsed' && !isMobile)
     return <SidebarNavSubmenuMenu icon={icon} label={label} items={items} />;
 
-  return <SidebarNavSubmenuCollapsible icon={icon} label={label} items={items} />;
+  return (
+    <SidebarNavSubmenuCollapsible
+      icon={icon}
+      label={label}
+      items={items}
+      defaultOpen={defaultOpen}
+    />
+  );
 }
