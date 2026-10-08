@@ -1,4 +1,4 @@
-import ItsAPlanMark from '@/components/brand/ItsAPlanMark';
+import PlanWMark from '@/components/brand/PlanWMark'; // FORK (APPLANO): rebranded
 import { APP_NAME, APP_SITE_URL } from '@/utils/app';
 
 // The header over a public shared page (a board or an issue). It shows the project
@@ -34,7 +34,7 @@ export default function PublicShareHeader({
         rel="noreferrer"
         className="ms-auto flex shrink-0 items-center gap-1.5 text-muted-foreground hover:text-foreground"
       >
-        <ItsAPlanMark className="size-5" />
+        <PlanWMark className="size-5" />
         <span className="text-sm font-semibold">{APP_NAME}</span>
       </a>
     </header>
