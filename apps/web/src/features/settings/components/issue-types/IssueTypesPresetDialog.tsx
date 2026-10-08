@@ -55,7 +55,7 @@ export default function IssueTypesPresetDialog({
   return (
     <Modal title={t('presetTitle')} onClose={onClose}>
       <div className="space-y-4">
-        <NewProjectPreset value={preset} onChange={setPreset} />
+        <NewProjectPreset value={preset} onChange={setPreset} hideDefaultNote />
         <p className="text-xs text-muted-foreground">{t('presetSummary', { count: missing.length })}</p>
         <div className="flex items-center justify-end gap-2">
           <Button variant="ghost" onClick={onClose} disabled={busy}>

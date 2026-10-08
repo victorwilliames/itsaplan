@@ -7,9 +7,13 @@ import { PRESETS, type PresetKey } from '@/utils/projectPresets';
 export default function NewProjectPreset({
   value,
   onChange,
+  hideDefaultNote = false,
 }: {
   value: PresetKey;
   onChange: (next: PresetKey) => void;
+  // Hides the "new issues get X by default" line: the apply-preset dialog never
+  // changes the default type, so the note would be misleading there.
+  hideDefaultNote?: boolean;
 }) {
   const t = useTranslations('newProject');
   const selected = PRESETS.find((p) => p.key === value) ?? PRESETS[0];
@@ -58,9 +62,11 @@ export default function NewProjectPreset({
             </span>
           ))}
         </div>
-        <p className="text-xs text-muted-foreground">
-          {t('defaultType', { type: selected.types[0].name })}
-        </p>
+        {!hideDefaultNote && (
+          <p className="text-xs text-muted-foreground">
+            {t('defaultType', { type: selected.types[0].name })}
+          </p>
+        )}
       </div>
     </div>
   );
