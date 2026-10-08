@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import Link from 'next/link';
 import { ChevronDown, type LucideIcon } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -19,23 +19,29 @@ export default function SidebarNavSubmenuCollapsible({
   label,
   items,
   defaultOpen,
+  openLabel,
+  openIcon,
 }: {
   icon: LucideIcon;
   label: string;
   items: SidebarNavSubmenuItem[];
   defaultOpen?: boolean;
+  // FORK (APPLANO): rótulo e ícone alternativos quando expandido.
+  openLabel?: string;
+  openIcon?: LucideIcon;
 }) {
+  // FORK (APPLANO): estado controlado para trocar rótulo/ícone quando abre.
+  const [open, setOpen] = useState(defaultOpen ?? items.some((i) => i.active));
+  const OpenIcon = openIcon ?? Icon;
+  const shownLabel = open && openLabel ? openLabel : label;
+  const ShownIcon = open && openIcon ? OpenIcon : Icon;
   return (
-    <Collapsible
-      asChild
-      defaultOpen={defaultOpen ?? items.some((i) => i.active)}
-      className="group/collapsible"
-    >
+    <Collapsible asChild open={open} onOpenChange={setOpen} className="group/collapsible">
       <SidebarMenuItem>
         <CollapsibleTrigger asChild>
           <SidebarMenuButton isActive={items.some((i) => i.active)}>
-            <Icon />
-            <span>{label}</span>
+            <ShownIcon />
+            <span>{shownLabel}</span>
             {/* FORK (APPLANO): fechado aponta pra baixo, aberto aponta pra cima. */}
             <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
           </SidebarMenuButton>
@@ -43,12 +49,13 @@ export default function SidebarNavSubmenuCollapsible({
         <CollapsibleContent>
           <SidebarMenuSub>
             {items.map((item, idx) => {
-              // FORK (APPLANO): mostra o cabeçalho do grupo quando ele muda.
+              // FORK (APPLANO): mostra o cabeçalho do grupo quando ele muda,
+              // com mais respiro entre categorias.
               const showGroup = item.group && (idx === 0 || items[idx - 1]?.group !== item.group);
               return (
                 <Fragment key={item.key}>
                   {showGroup && (
-                    <li className="px-2 pt-2 pb-1 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                    <li className="px-2 pt-4 pb-1 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
                       {item.group}
                     </li>
                   )}

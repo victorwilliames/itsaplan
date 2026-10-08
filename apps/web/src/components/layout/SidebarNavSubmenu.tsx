@@ -23,12 +23,17 @@ export default function SidebarNavSubmenu({
   label,
   items,
   defaultOpen,
+  openLabel,
+  openIcon,
 }: {
   icon: LucideIcon;
   label: string;
   items: SidebarNavSubmenuItem[];
   // FORK (APPLANO): permite forçar o grupo a começar fechado.
   defaultOpen?: boolean;
+  // FORK (APPLANO): rótulo e ícone alternativos quando expandido.
+  openLabel?: string;
+  openIcon?: LucideIcon;
 }) {
   const { state, isMobile } = useSidebar();
 
@@ -41,6 +46,8 @@ export default function SidebarNavSubmenu({
       label={label}
       items={items}
       defaultOpen={defaultOpen}
+      openLabel={openLabel}
+      openIcon={openIcon}
     />
   );
 }

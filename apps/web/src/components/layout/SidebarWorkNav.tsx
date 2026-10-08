@@ -8,6 +8,7 @@ import {
   Braces,
   Inbox,
   LayoutDashboard,
+  Minus,
   Plus,
   RefreshCw,
   Server,
@@ -207,7 +208,8 @@ export default function SidebarWorkNav({
         key: 'project-settings',
         href: firstHref,
         icon: Settings,
-        label: t('projectSettings'),
+        // FORK (APPLANO): rótulo curto em PT-BR (fork-only).
+        label: 'Config Projeto',
         active: false,
         group: t('configuration'),
       });
@@ -284,6 +286,9 @@ export default function SidebarWorkNav({
               <SidebarNavSubmenu
                 icon={Plus}
                 label="Ver mais"
+                // FORK (APPLANO): quando expandido vira "Ver menos".
+                openLabel="Ver menos"
+                openIcon={Minus}
                 items={verMaisItems}
                 defaultOpen={false}
               />
