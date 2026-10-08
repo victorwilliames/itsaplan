@@ -109,7 +109,7 @@ export default function SidebarWorkNav({
       key: 'all',
       href: projectPath(projectKey),
       icon: SquareKanban,
-      label: 'Todas as tarefas',
+      label: 'Tarefas',
       active: onWorkItems && !favorites.some((v) => pathname === viewPath(projectKey, v.id)),
     });
     for (const v of favorites) {
