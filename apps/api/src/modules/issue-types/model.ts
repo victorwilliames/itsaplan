@@ -25,3 +25,7 @@ export const updateIssueTypeBody = t.Object({
   color: t.Optional(t.String()),
   isDefault: t.Optional(t.Boolean()),
 });
+
+export const applyPresetBody = t.Object({
+  preset: t.String({ minLength: 1 }),
+});

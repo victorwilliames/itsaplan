@@ -228,7 +228,12 @@
     "importTitle": "Aplicar tipos de issue da área de transferência",
     "importSummary": "{count, plural, one {# tipo de issue será aplicado} other {# tipos de issue serão aplicados}}. Um tipo correspondente só tem sua cor atualizada.",
     "importApply": "{count, plural, one {Aplicar # tipo} other {Aplicar # tipos}}",
-    "imported": "Tipos de issue aplicados: {created} criados, {updated} atualizados."
+    "imported": "Tipos de issue aplicados: {created} criados, {updated} atualizados.",
+    "applyPreset": "Aplicar modelo",
+    "presetTitle": "Aplicar modelo de tipos de issue",
+    "presetSummary": "{count, plural, =0 {O projeto já tem todos os tipos deste modelo.} one {# tipo será adicionado.} other {# tipos serão adicionados.}}",
+    "presetApply": "Aplicar",
+    "presetApplied": "{count, plural, =0 {Nenhum tipo novo: o projeto já tem todos.} one {# tipo adicionado.} other {# tipos adicionados.}}"
   },
   "labels": {
     "add": "Adicionar",

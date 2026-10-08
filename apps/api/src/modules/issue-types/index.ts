@@ -9,8 +9,9 @@ import {
   createIssueTypeBody,
   issueTypeParams,
   updateIssueTypeBody,
+  applyPresetBody,
 } from './model';
-import { createIssueType, updateIssueType, deleteIssueType } from './service';
+import { createIssueType, updateIssueType, deleteIssueType, applyIssueTypePreset } from './service';
 
 export const issueTypeRoutes = new Elysia({
   name: 'issue-types',
@@ -36,6 +37,24 @@ export const issueTypeRoutes = new Elysia({
         description:
           'Create an issue type. Set isDefault to make it the default type for new issues.',
         ...mcpTool('create_issue_type'),
+      },
+    },
+  )
+
+  .post(
+    '/projects/:projectKey/issue-types/apply-preset',
+    async ({ project, body }) => {
+      return await applyIssueTypePreset(project.id, body.preset);
+    },
+    {
+      body: applyPresetBody,
+      permission: ['issue_types', 'create'],
+      response: { 200: t.Array(IssueTypeResponse), ...commonErrors, ...errors(400) },
+      detail: {
+        summary: 'Apply an issue type preset',
+        description:
+          'Insert the types of a preset (general, software, product, ...) that the project does not have yet. Existing types are kept.',
+        ...mcpTool('apply_issue_type_preset'),
       },
     },
   )

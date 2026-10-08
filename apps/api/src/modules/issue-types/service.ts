@@ -1,5 +1,7 @@
 import { db, issueType } from '@repo/db';
 import { and, eq, sql } from 'drizzle-orm';
+import { HttpError } from '#shared/lib';
+import { ISSUE_TYPE_PRESETS } from '#modules/projects/service';
 
 // Data access for issue types. An issue type belongs to one project. Deleting a
 // type sets type_id NULL on its issues and cascades to its type-scoped custom
@@ -90,4 +92,24 @@ export async function updateIssueType(
 // Scoped to projectId: an id outside the project deletes nothing.
 export async function deleteIssueType(id: number, projectId: number): Promise<void> {
   await db.delete(issueType).where(and(eq(issueType.id, id), eq(issueType.projectId, projectId)));
+}
+
+// Applies an issue-type preset to an existing project: inserts the preset's
+// types the project does not have yet (matched by name, case-insensitive),
+// appended after the current types. Existing types and the default flag are
+// left untouched. Returns the types that were created (empty when the project
+// already has them all).
+export async function applyIssueTypePreset(
+  projectId: number,
+  preset: string,
+): Promise<IssueTypeRow[]> {
+  const types = ISSUE_TYPE_PRESETS[preset];
+  if (!types) throw new HttpError(400, `Unknown issue type preset: ${preset}`);
+  const existing = await listIssueTypes(projectId);
+  const names = new Set(existing.map((t) => t.name.toLowerCase()));
+  const created: IssueTypeRow[] = [];
+  for (const type of types.filter((t) => !names.has(t.name.toLowerCase()))) {
+    created.push(await createIssueType({ projectId, name: type.name, color: type.color }));
+  }
+  return created;
 }

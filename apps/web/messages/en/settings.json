@@ -228,7 +228,12 @@
     "importTitle": "Apply issue types from clipboard",
     "importSummary": "{count, plural, one {# issue type} other {# issue types}} will be applied. A matching type only has its color updated.",
     "importApply": "{count, plural, one {Apply # type} other {Apply # types}}",
-    "imported": "Applied issue types: {created} created, {updated} updated."
+    "imported": "Applied issue types: {created} created, {updated} updated.",
+    "applyPreset": "Apply preset",
+    "presetTitle": "Apply issue type preset",
+    "presetSummary": "{count, plural, =0 {The project already has all types of this preset.} one {# type will be added.} other {# types will be added.}}",
+    "presetApply": "Apply",
+    "presetApplied": "{count, plural, =0 {No new types: the project already has them all.} one {# type added.} other {# types added.}}"
   },
   "labels": {
     "add": "Add",

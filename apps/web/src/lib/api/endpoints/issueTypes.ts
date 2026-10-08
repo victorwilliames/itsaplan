@@ -31,3 +31,9 @@ export const updateIssueType = (
 
 export const deleteIssueType = (projectKey: string, typeId: number) =>
   request<void>(`/projects/${projectKey}/issue-types/${typeId}`, { method: 'DELETE' });
+
+export const applyIssueTypePreset = (projectKey: string, preset: string) =>
+  request<IssueType[]>(`/projects/${projectKey}/issue-types/apply-preset`, {
+    method: 'POST',
+    body: JSON.stringify({ preset }),
+  });

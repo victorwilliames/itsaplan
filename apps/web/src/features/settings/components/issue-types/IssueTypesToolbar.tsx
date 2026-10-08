@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { ClipboardPaste, Copy, MoreHorizontal } from 'lucide-react';
+import { ClipboardPaste, Copy, LayoutTemplate, MoreHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import type { PermissionResource } from '@/lib/api/endpoints/roles';
@@ -19,6 +19,7 @@ import { useIsMac } from '@/context/useHotkeys';
 import { useTransferErrorMessage } from '../../hooks/useTransferErrorMessage';
 import { SettingsHeaderAddButton } from '../crud/SettingsHeaderAddButton';
 import IssueTypesImportDialog from './IssueTypesImportDialog';
+import IssueTypesPresetDialog from './IssueTypesPresetDialog';
 import {
   parseIssueTypesText,
   planIssueTypesImport,
@@ -45,6 +46,7 @@ export default function IssueTypesToolbar({
   const { can } = usePermissions();
   const mod = useIsMac() ? '⌘' : 'Ctrl';
   const [importing, setImporting] = useState<PlannedIssueType[] | null>(null);
+  const [presetting, setPresetting] = useState(false);
 
   const copyTypes = useCallback(async () => {
     if (types.length === 0) {
@@ -128,6 +130,10 @@ export default function IssueTypesToolbar({
               {t('paste')}
               <DropdownMenuShortcut>{mod}V</DropdownMenuShortcut>
             </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setPresetting(true)}>
+              <LayoutTemplate className="size-4" />
+              {t('applyPreset')}
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )}
@@ -139,6 +145,14 @@ export default function IssueTypesToolbar({
           projectKey={projectKey}
           planned={importing}
           onClose={() => setImporting(null)}
+        />
+      )}
+
+      {presetting && (
+        <IssueTypesPresetDialog
+          projectKey={projectKey}
+          types={types}
+          onClose={() => setPresetting(false)}
         />
       )}
     </div>

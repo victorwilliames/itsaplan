@@ -58,7 +58,7 @@ import {
   updateIssueTemplate,
   deleteIssueTemplate,
 } from '@/lib/api/endpoints/issueTemplates';
-import { createIssueType, updateIssueType, deleteIssueType } from '@/lib/api/endpoints/issueTypes';
+import { createIssueType, updateIssueType, deleteIssueType, applyIssueTypePreset } from '@/lib/api/endpoints/issueTypes';
 import {
   createLabel,
   updateLabel,
@@ -129,6 +129,12 @@ export function useUpdateIssueType(projectKey: string) {
 
 export function useDeleteIssueType(projectKey: string) {
   return useProjectMutation(projectKey, (id: number) => deleteIssueType(projectKey, id));
+}
+
+export function useApplyIssueTypePreset(projectKey: string) {
+  return useProjectMutation(projectKey, (preset: string) =>
+    applyIssueTypePreset(projectKey, preset),
+  );
 }
 
 export function useCreateLabel(projectKey: string) {
