@@ -415,6 +415,7 @@ export const DEFAULT_COLUMNS: { name: string; stateType: string; color: string }
   { name: 'A Fazer', stateType: 'backlog', color: '#71717a' },
   { name: 'Pausado', stateType: 'started', color: '#eab308' },
   { name: 'Fazendo Agora', stateType: 'started', color: '#3b82f6' },
+  { name: 'Aguardando Aprovação', stateType: 'started', color: '#a855f7' },
   { name: 'Concluído', stateType: 'completed', color: '#22c55e' },
   { name: 'Cancelado', stateType: 'canceled', color: '#ef4444' },
 ];
