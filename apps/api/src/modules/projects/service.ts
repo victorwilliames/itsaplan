@@ -13,6 +13,7 @@ import {
   projectColumn,
   projectMember,
   projectDocument,
+  projectView,
   teamRole,
   projectSetting,
   team,
@@ -418,6 +419,15 @@ export const DEFAULT_COLUMNS: { name: string; stateType: string; color: string }
   { name: 'Cancelado', stateType: 'canceled', color: '#ef4444' },
 ];
 
+// TEMPORARY HACK (fork-only, never upstream): new projects start with the
+// owner's two preferred views: a Kanban board and an ungrouped table ("Lista").
+// The web fills any missing display keys with its own defaults. The proper fix
+// would be a view-template setting (tracked on the FI board).
+const DEFAULT_VIEWS: { name: string; display: Record<string, unknown> }[] = [
+  { name: 'Kanban', display: { layout: 'kanban', group: 'status' } },
+  { name: 'Lista', display: { layout: 'table', group: 'none' } },
+];
+
 // Issue types a new project starts with, picked by sphere of work in the create
 // dialog. The first entry of a set becomes the project's default type. "general"
 // is the fallback when no preset is chosen: a single Task, so the project is
@@ -539,6 +549,14 @@ export async function createProject(
         name: column.name,
         stateType: column.stateType,
         color: column.color,
+        position,
+      });
+    }
+    for (const [position, view] of DEFAULT_VIEWS.entries()) {
+      await tx.insert(projectView).values({
+        projectId: row.id,
+        name: view.name,
+        display: view.display,
         position,
       });
     }
