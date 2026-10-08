@@ -1,15 +1,19 @@
+import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useShellRoute } from '@/hooks/useShellRoute';
 import { useTranslations } from 'next-intl';
 import {
   Bell,
   BookOpenText,
+  Braces,
   ChevronDown,
   Inbox,
   LayoutDashboard,
   ListTodo,
   RefreshCw,
+  Server,
   Settings,
+  Shield,
   SquareKanban,
   StickyNote,
   Target,
@@ -18,11 +22,14 @@ import {
 import {
   aiAgentsPath,
   aiTeamPath,
+  apiDocsPath,
   cyclesPath,
   dashboardsPath,
   documentsPath,
+  godPath,
   inboxPath,
   initiativesPath,
+  mcpServerPath,
   membersPath,
   notesPath,
   notificationsPath,
@@ -30,12 +37,14 @@ import {
   viewPath,
 } from '@/utils/paths';
 import { AI_AGENTS_SECTION, AI_TEAM_SECTIONS } from '@/utils/settingsSections';
+import { GOD_SECTIONS } from '@/utils/godSections';
 import { useSettingsSectionText } from '@/hooks/useSectionLabels';
 import { useSettingsNavGroups } from '@/hooks/useSettingsNavGroups';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useProjectFeatures } from '@/hooks/useProjectFeatures';
 import { useInboxUnread } from '@/hooks/useInboxUnread';
 import { useViewsQuery } from '@/services/views.service';
+import { useSession } from '@/lib/auth-client';
 import { viewIcon } from '@/utils/viewIcons';
 import { SidebarGroup, SidebarGroupContent, SidebarMenu } from '@/components/ui/sidebar';
 import SidebarNavItem from '@/components/layout/SidebarNavItem';
@@ -69,6 +78,12 @@ export default function SidebarWorkNav({
   const { data: views } = useViewsQuery(projectKey);
   const favorites = views?.filter((v) => v.favorite) ?? [];
   const { firstHref } = useSettingsNavGroups(projectKey);
+  const { data: session } = useSession();
+  // FORK (APPLANO): mesmo padrão do AppSidebar — ler a sessão só após o mount
+  // para não quebrar a hidratação.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isGod = mounted && session?.user.role === 'god';
 
   // "Work items" is the default view: active on the project root and any segment
   // that is not one of the other top-level destinations.
@@ -186,6 +201,31 @@ export default function SidebarWorkNav({
         href: firstHref,
         icon: Settings,
         label: t('projectSettings'),
+        active: false,
+      });
+    }
+    // FORK (APPLANO): Docs da API, Servidor MCP e Modo god saíram do rodapé
+    // e vieram para dentro do "Ver mais".
+    verMaisItems.push({
+      key: 'api-docs',
+      href: projectKey ? apiDocsPath(projectKey) : '#',
+      icon: Braces,
+      label: t('apiDocs'),
+      active: pathname.endsWith('/api'),
+    });
+    verMaisItems.push({
+      key: 'mcp-server',
+      href: projectKey ? mcpServerPath(projectKey) : '#',
+      icon: Server,
+      label: t('mcpServer'),
+      active: pathname.endsWith('/mcp'),
+    });
+    if (isGod) {
+      verMaisItems.push({
+        key: 'god-mode',
+        href: godPath(GOD_SECTIONS[0]!.slug),
+        icon: Shield,
+        label: t('godMode'),
         active: false,
       });
     }
