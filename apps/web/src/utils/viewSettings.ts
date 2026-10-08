@@ -164,12 +164,13 @@ export interface ViewSettings {
 const DEFAULT_SORT: Sort = { field: 'manual', dir: 'asc' };
 
 // Options shared by every view; group, subgroup and properties differ per view.
+// FORK (APPLANO): defaults match the owner's preferred kanban setup (fork-only).
 const COMMON: Omit<ViewSettings, 'group' | 'subgroup' | 'properties' | 'sort'> = {
   showEmptyGroups: true,
-  showLinks: false,
+  showLinks: true,
   showSubtasks: true,
-  separateSubtasks: false,
-  collapseSubtasks: false,
+  separateSubtasks: true,
+  collapseSubtasks: true,
   timelineScale: 'week',
   timelineCollapseAll: false,
   calendarDateField: 'dueDate',
@@ -181,19 +182,9 @@ const COMMON: Omit<ViewSettings, 'group' | 'subgroup' | 'properties' | 'sort'> =
 
 // The properties shown by default per view; the Timeline and Calendar lay issues
 // out by date and show none.
+// FORK (APPLANO): kanban default is ID, Estado, Prioridade, Tipo (fork-only).
 const DEFAULT_PROPERTIES: Record<WorkItemsView, DisplayProperty[]> = {
-  kanban: [
-    'status',
-    'statusAge',
-    'priority',
-    'type',
-    'dueDate',
-    'labels',
-    'assignee',
-    'delegate',
-    'created',
-    'updated',
-  ],
+  kanban: ['id', 'status', 'priority', 'type'],
   table: [
     'assignee',
     'delegate',
