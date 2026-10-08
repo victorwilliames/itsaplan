@@ -17,9 +17,10 @@ import { clearLimits, setLimits } from '#tests/helpers/limits';
 // view, and delete. createProject seeds five default columns (one per state type)
 // and any agents selected as the team's defaults.
 
-// createProject seeds one column per state type; a new project always has these
-// five and nothing else.
-const DEFAULT_COLUMN_NAMES = ['Backlog', 'Todo', 'In Progress', 'Done', 'Canceled'];
+// TEMPORARY HACK (fork-only): matches the PT-BR DEFAULT_COLUMNS override in
+// projects/service.ts. Revert to ['Backlog', 'Todo', 'In Progress', 'Done',
+// 'Canceled'] if the hack is removed.
+const DEFAULT_COLUMN_NAMES = ['A Fazer', 'Pausado', 'Fazendo Agora', 'Concluído', 'Cancelado'];
 
 // Registers a user and returns a Treaty client acting as them.
 async function signUpClient() {

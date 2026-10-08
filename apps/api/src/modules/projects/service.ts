@@ -405,14 +405,17 @@ async function ownedTeam(userId: string): Promise<TargetTeam> {
   return row;
 }
 
-// Every new project starts with one column per state type, so it's usable (has
-// somewhere to put an issue) without a trip to Settings first.
+// TEMPORARY HACK (fork-only, never upstream): personal default workflow states in
+// PT-BR for the owner's instance. The proper fix is a ClickUp-style status
+// template system (tracked on the FI board). Every new project starts with these
+// columns, so it's usable (has somewhere to put an issue) without a trip to
+// Settings first.
 export const DEFAULT_COLUMNS: { name: string; stateType: string; color: string }[] = [
-  { name: 'Backlog', stateType: 'backlog', color: '#71717a' },
-  { name: 'Todo', stateType: 'unstarted', color: '#6b7280' },
-  { name: 'In Progress', stateType: 'started', color: '#eab308' },
-  { name: 'Done', stateType: 'completed', color: '#22c55e' },
-  { name: 'Canceled', stateType: 'canceled', color: '#ef4444' },
+  { name: 'A Fazer', stateType: 'backlog', color: '#71717a' },
+  { name: 'Pausado', stateType: 'started', color: '#eab308' },
+  { name: 'Fazendo Agora', stateType: 'started', color: '#3b82f6' },
+  { name: 'Concluído', stateType: 'completed', color: '#22c55e' },
+  { name: 'Cancelado', stateType: 'canceled', color: '#ef4444' },
 ];
 
 // Issue types a new project starts with, picked by sphere of work in the create
