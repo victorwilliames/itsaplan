@@ -76,7 +76,9 @@
     "react-grid-layout": "^2.2.4",
     "recharts": "3.10.1",
     "sonner": "^2.0.8",
-    "tiptap-markdown": "^0.9.0"
+    "three": "^0.186.1",
+    "tiptap-markdown": "^0.9.0",
+    "vanta": "^0.5.24"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -86,6 +88,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@types/react-grid-layout": "^2.1.0",
+    "@types/three": "^0.186.0",
     "eslint": "^9.39.0",
     "eslint-plugin-i18n-json": "^4.0.1",
     "jsdom": "^30.0.1",
