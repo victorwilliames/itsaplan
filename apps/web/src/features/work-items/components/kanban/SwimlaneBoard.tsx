@@ -24,7 +24,6 @@ import { useGroupLabels } from '@/hooks/useGroupLabels';
 import { useSelection } from '../../context/useSelection';
 import { GroupDot } from '../shared/GroupDot';
 import { WipCount } from './WipCount';
-import { SelectAllToggle } from './SelectAllToggle';
 import { CardOverlay } from './CardOverlay';
 import { SwimlaneCell } from './SwimlaneCell';
 import {
@@ -100,17 +99,6 @@ export default function SwimlaneBoard({
       count,
       cells: columns.map((column) => ({ column, issues: inner.get(column.key) ?? [] })),
     });
-  }
-
-  // Every visible issue id per column, across swimlanes — the target of a column
-  // header's select-all.
-  const idsByColumn = new Map<string, number[]>();
-  for (const row of rows) {
-    for (const cell of row.cells) {
-      const list = idsByColumn.get(cell.column.key) ?? [];
-      for (const i of cell.issues) list.push(i.id);
-      idsByColumn.set(cell.column.key, list);
-    }
   }
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -196,9 +184,6 @@ export default function SwimlaneBoard({
                   wip={wipOf(column)}
                   filtered={filtered}
                 />
-                {!readOnly && (
-                  <SelectAllToggle ids={idsByColumn.get(column.key) ?? []} className="ml-auto" />
-                )}
               </div>
             ))}
           </div>
