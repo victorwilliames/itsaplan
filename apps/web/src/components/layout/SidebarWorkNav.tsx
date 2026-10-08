@@ -37,12 +37,7 @@ import { useProjectFeatures } from '@/hooks/useProjectFeatures';
 import { useInboxUnread } from '@/hooks/useInboxUnread';
 import { useViewsQuery } from '@/services/views.service';
 import { viewIcon } from '@/utils/viewIcons';
-import {
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarSeparator,
-} from '@/components/ui/sidebar';
+import { SidebarGroup, SidebarGroupContent, SidebarMenu } from '@/components/ui/sidebar';
 import SidebarNavItem from '@/components/layout/SidebarNavItem';
 import SidebarNavSubmenu, {
   type SidebarNavSubmenuItem,
@@ -197,47 +192,52 @@ export default function SidebarWorkNav({
   }
 
   return (
-    <SidebarGroup>
-      <SidebarGroupContent>
-        <SidebarMenu>
-          <SidebarNavItem
-            href={projectKey ? inboxPath(projectKey) : '#'}
-            icon={Inbox}
-            label={t('inbox')}
-            active={pathname.endsWith('/inbox')}
-            disabled={disabled}
-            badge={inboxUnread}
-          />
-          {features.dashboards && can('dashboards', 'read') && (
+    <>
+      <SidebarGroup>
+        <SidebarGroupContent>
+          <SidebarMenu>
             <SidebarNavItem
-              href={projectKey ? dashboardsPath(projectKey) : '#'}
-              icon={LayoutDashboard}
-              label={t('dashboards')}
-              active={pathname.includes('/dashboard')}
+              href={projectKey ? inboxPath(projectKey) : '#'}
+              icon={Inbox}
+              label={t('inbox')}
+              active={pathname.endsWith('/inbox')}
               disabled={disabled}
+              badge={inboxUnread}
             />
-          )}
-          {!disabled && tarefasItems.length > 0 && (
-            <SidebarNavSubmenu
-              icon={ListTodo}
-              label="Tarefas"
-              items={tarefasItems}
-              defaultOpen={false}
-            />
-          )}
-          {verMaisItems.length > 0 && (
-            <>
-              <SidebarSeparator />
+            {features.dashboards && can('dashboards', 'read') && (
+              <SidebarNavItem
+                href={projectKey ? dashboardsPath(projectKey) : '#'}
+                icon={LayoutDashboard}
+                label={t('dashboards')}
+                active={pathname.includes('/dashboard')}
+                disabled={disabled}
+              />
+            )}
+            {!disabled && tarefasItems.length > 0 && (
+              <SidebarNavSubmenu
+                icon={ListTodo}
+                label="Tarefas"
+                items={tarefasItems}
+                defaultOpen={false}
+              />
+            )}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+      {verMaisItems.length > 0 && (
+        <SidebarGroup className="mt-auto">
+          <SidebarGroupContent>
+            <SidebarMenu>
               <SidebarNavSubmenu
                 icon={ChevronDown}
                 label="Ver mais"
                 items={verMaisItems}
                 defaultOpen={false}
               />
-            </>
-          )}
-        </SidebarMenu>
-      </SidebarGroupContent>
-    </SidebarGroup>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      )}
+    </>
   );
 }
