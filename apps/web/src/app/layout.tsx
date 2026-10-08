@@ -32,7 +32,7 @@ export default async function RootLayout({
           // A distinct key: next-themes defaults to "theme", which collides with any
           // other app sharing the same localhost origin. A shared key makes two such
           // apps fight over the value through cross-tab storage events.
-          storageKey="itsaplan-theme"
+          storageKey="planw-theme"
         >
           <NextIntlClientProvider>
             <Providers>

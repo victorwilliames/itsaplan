@@ -186,7 +186,7 @@ async function resolveCommitSha(loc: GithubSkillLocation): Promise<string> {
     const url = `https://github.com/${loc.owner}/${loc.repo}/commits/${encodePath(ref)}.atom`;
     let res: Response;
     try {
-      res = await fetch(url, { headers: { 'User-Agent': 'itsaplan' } });
+      res = await fetch(url, { headers: { 'User-Agent': 'planw' } });
     } catch {
       throw new HttpError(502, 'Failed to reach GitHub');
     }
@@ -211,7 +211,7 @@ async function fetchTree(loc: GithubSkillLocation): Promise<RepoTree> {
   const url = `${JSDELIVR_DATA}/${loc.owner}/${loc.repo}@${sha}?structure=flat`;
   let res: Response;
   try {
-    res = await fetch(url, { headers: { 'User-Agent': 'itsaplan' } });
+    res = await fetch(url, { headers: { 'User-Agent': 'planw' } });
   } catch {
     throw new HttpError(502, 'Failed to reach jsDelivr');
   }

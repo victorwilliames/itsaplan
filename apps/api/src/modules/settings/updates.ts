@@ -137,7 +137,7 @@ async function localHistory(): Promise<Release[]> {
 
 async function readFeed(): Promise<Release[]> {
   const res = await fetch(FEED_URL, {
-    headers: { 'User-Agent': 'itsaplan' },
+    headers: { 'User-Agent': 'planw' },
     signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
   });
   if (!res.ok) throw new Error(`feed returned ${res.status}`);
