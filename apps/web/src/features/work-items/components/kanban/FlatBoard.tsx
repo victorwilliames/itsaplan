@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { DndContext } from '@dnd-kit/core';
 import { toast } from 'sonner';
 import { ChevronDown, Eye } from 'lucide-react';
@@ -67,13 +67,27 @@ export default function FlatBoard({
   // the view's display (settings.collapsedGroups) and persists the same way as
   // hiddenGroups.
   const collapsedSet = new Set(settings.collapsedGroups);
-  const setCollapsed = (key: string, collapse: boolean) =>
+  // FORK (APPLANO): empty columns the user explicitly expanded stay open.
+  const [expandedEmpty, setExpandedEmpty] = useState<Set<string>>(new Set());
+  const setCollapsed = (key: string, collapse: boolean) => {
+    // FORK (APPLANO): expanding an empty column tracks it locally so the
+    // auto-collapse does not immediately close it again.
+    if (!collapse) {
+      setExpandedEmpty((prev) => new Set(prev).add(key));
+    } else {
+      setExpandedEmpty((prev) => {
+        const next = new Set(prev);
+        next.delete(key);
+        return next;
+      });
+    }
     onSettingsChange({
       ...settings,
       collapsedGroups: collapse
         ? [...settings.collapsedGroups, key]
         : settings.collapsedGroups.filter((k) => k !== key),
     });
+  };
 
   // At most one column is pinned. It persists the same way as the two sets above.
   const togglePin = (key: string) =>
@@ -84,17 +98,35 @@ export default function FlatBoard({
   const issuesByGroup = groupIssues(groups, sorted, settings.group);
   const maps = buildMaps(project);
 
-  // Empty columns collapse on their own; a column that receives cards expands on
-  // its own. A manual collapse/expand of a non-empty column still persists.
+  // FORK (APPLANO): empty columns collapse on their own; a column that
+  // receives cards expands on its own. Manual collapse/expand always wins:
+  // expanding an empty column is tracked locally so it stays open.
   const groupCount = (key: string) => issuesByGroup.get(key)?.length ?? 0;
-  const isCollapsed = (key: string) => collapsedSet.has(key) || groupCount(key) === 0;
+  const isCollapsed = (key: string) =>
+    (collapsedSet.has(key) || groupCount(key) === 0) && !expandedEmpty.has(key);
 
   useEffect(() => {
-    const stillCollapsed = settings.collapsedGroups.filter((k) => groupCount(k) === 0);
-    if (stillCollapsed.length !== settings.collapsedGroups.length) {
-      onSettingsChange({ ...settings, collapsedGroups: stillCollapsed });
+    // Auto-expand manually-collapsed columns that received cards.
+    const gotCards = settings.collapsedGroups.filter((k) => groupCount(k) > 0);
+    if (gotCards.length > 0) {
+      onSettingsChange({
+        ...settings,
+        collapsedGroups: settings.collapsedGroups.filter((k) => groupCount(k) === 0),
+      });
     }
-    // issuesByGroup identity changes every render; the length check above keeps
+    // Drop the local override for columns that now have cards.
+    setExpandedEmpty((prev) => {
+      let changed = false;
+      const next = new Set(prev);
+      for (const k of prev) {
+        if (groupCount(k) > 0) {
+          next.delete(k);
+          changed = true;
+        }
+      }
+      return changed ? next : prev;
+    });
+    // issuesByGroup identity changes every render; the length checks above keep
     // this from writing on every pass.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   });
