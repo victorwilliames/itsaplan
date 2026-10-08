@@ -6,9 +6,9 @@ import {
   Bell,
   BookOpenText,
   Braces,
-  ChevronDown,
   Inbox,
   LayoutDashboard,
+  Plus,
   RefreshCw,
   Server,
   Settings,
@@ -45,7 +45,12 @@ import { useInboxUnread } from '@/hooks/useInboxUnread';
 import { useViewsQuery } from '@/services/views.service';
 import { useSession } from '@/lib/auth-client';
 import { viewIcon } from '@/utils/viewIcons';
-import { SidebarGroup, SidebarGroupContent, SidebarMenu } from '@/components/ui/sidebar';
+import {
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarSeparator,
+} from '@/components/ui/sidebar';
 import SidebarNavItem from '@/components/layout/SidebarNavItem';
 import SidebarNavSubmenu, {
   type SidebarNavSubmenuItem,
@@ -274,8 +279,10 @@ export default function SidebarWorkNav({
         <SidebarGroup className="mt-auto">
           <SidebarGroupContent>
             <SidebarMenu>
+              {/* FORK (APPLANO): separador acima do "Ver mais". */}
+              <SidebarSeparator className="mb-1" />
               <SidebarNavSubmenu
-                icon={ChevronDown}
+                icon={Plus}
                 label="Ver mais"
                 items={verMaisItems}
                 defaultOpen={false}

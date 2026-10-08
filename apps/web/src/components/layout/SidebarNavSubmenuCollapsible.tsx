@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import Link from 'next/link';
-import { ChevronRight, type LucideIcon } from 'lucide-react';
+import { ChevronDown, type LucideIcon } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
   SidebarMenuButton,
@@ -36,7 +36,8 @@ export default function SidebarNavSubmenuCollapsible({
           <SidebarMenuButton isActive={items.some((i) => i.active)}>
             <Icon />
             <span>{label}</span>
-            <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+            {/* FORK (APPLANO): fechado aponta pra baixo, aberto aponta pra cima. */}
+            <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
           </SidebarMenuButton>
         </CollapsibleTrigger>
         <CollapsibleContent>
