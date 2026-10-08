@@ -1,4 +1,4 @@
-import { ChevronsLeftRight, Pin, PinOff, Plus } from 'lucide-react';
+import { ChevronsLeftRight, Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { type IssueGroup } from '@/utils/project';
 import { usePermissions } from '@/hooks/usePermissions';
@@ -18,7 +18,6 @@ export function CollapsedColumn({
   wip,
   pinned,
   onExpand,
-  onTogglePin,
   onAddIssue,
   readOnly,
 }: {
@@ -29,7 +28,6 @@ export function CollapsedColumn({
   wip: WipState | null;
   pinned: boolean;
   onExpand: () => void;
-  onTogglePin: () => void;
   onAddIssue: () => void;
   readOnly?: boolean;
 }) {
@@ -58,20 +56,6 @@ export function CollapsedColumn({
               </Button>
             </TooltipTrigger>
             <TooltipContent>{t('expand')}</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hidden size-6 text-muted-foreground md:inline-flex"
-                onClick={onTogglePin}
-                aria-label={pinned ? t('unpin') : t('pin')}
-              >
-                {pinned ? <PinOff /> : <Pin />}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>{pinned ? t('unpin') : t('pin')}</TooltipContent>
           </Tooltip>
           {canCreateIssue && (
             <Tooltip>

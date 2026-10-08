@@ -89,10 +89,6 @@ export default function FlatBoard({
     });
   };
 
-  // At most one column is pinned. It persists the same way as the two sets above.
-  const togglePin = (key: string) =>
-    onSettingsChange({ ...settings, pinnedGroup: settings.pinnedGroup === key ? null : key });
-
   const groups = buildGroups(project, settings.group, groupLabels, filters);
   const sorted = sortIssues(project.issues, settings.sort, project);
   const issuesByGroup = groupIssues(groups, sorted, settings.group);
@@ -201,7 +197,6 @@ export default function FlatBoard({
               wip={wipOf(group)}
               pinned={group === pinnedGroup}
               onExpand={() => setCollapsed(group.key, false)}
-              onTogglePin={() => togglePin(group.key)}
               onAddIssue={() => addIssueTo(group)}
               readOnly={readOnly}
             />
