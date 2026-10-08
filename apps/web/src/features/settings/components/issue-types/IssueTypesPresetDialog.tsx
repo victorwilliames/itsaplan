@@ -40,8 +40,11 @@ export default function IssueTypesPresetDialog({
   async function apply() {
     setBusy(true);
     try {
-      const created = await applyPreset.mutateAsync(preset);
-      toast.success(t('presetApplied', { count: created.length }));
+      // The endpoint returns exactly the created types, which is what was
+      // missing; the mutation itself is typed as unknown, so count locally.
+      const createdCount = missing.length;
+      await applyPreset.mutateAsync(preset);
+      toast.success(t('presetApplied', { count: createdCount }));
       onClose();
     } catch {
       // The failed mutation is toasted by the global handler; keep the dialog open.
