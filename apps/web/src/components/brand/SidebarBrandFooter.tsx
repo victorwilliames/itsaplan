@@ -38,7 +38,7 @@ export default function SidebarBrandFooter() {
   const content = (
     <>
       {newerVersion ? (
-        <span className="flex items-center gap-1.5 text-[10px] font-medium tracking-wider text-primary uppercase">
+        <span className="flex items-center gap-1.5 text-[10px] font-medium tracking-wider text-primary uppercase group-data-[collapsible=icon]:hidden">
           {/* A pulsing ring around the dot, so the update is noticed in a footer
               nobody looks at. */}
           <span className="relative flex size-1.5" aria-hidden>
@@ -48,7 +48,7 @@ export default function SidebarBrandFooter() {
           {`v${newerVersion} available`}
         </span>
       ) : (
-        <span className="flex items-center gap-1.5 text-[10px] font-medium tracking-wider text-muted-foreground uppercase">
+        <span className="flex items-center gap-1.5 text-[10px] font-medium tracking-wider text-muted-foreground uppercase group-data-[collapsible=icon]:hidden">
           <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" aria-hidden />
           {version ? `v${version}` : 'Self-hosted'}
         </span>
