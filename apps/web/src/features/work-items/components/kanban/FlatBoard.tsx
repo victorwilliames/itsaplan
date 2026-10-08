@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { DndContext } from '@dnd-kit/core';
 import { toast } from 'sonner';
 import { ChevronDown, Eye } from 'lucide-react';
@@ -83,6 +84,21 @@ export default function FlatBoard({
   const issuesByGroup = groupIssues(groups, sorted, settings.group);
   const maps = buildMaps(project);
 
+  // Empty columns collapse on their own; a column that receives cards expands on
+  // its own. A manual collapse/expand of a non-empty column still persists.
+  const groupCount = (key: string) => issuesByGroup.get(key)?.length ?? 0;
+  const isCollapsed = (key: string) => collapsedSet.has(key) || groupCount(key) === 0;
+
+  useEffect(() => {
+    const stillCollapsed = settings.collapsedGroups.filter((k) => groupCount(k) === 0);
+    if (stillCollapsed.length !== settings.collapsedGroups.length) {
+      onSettingsChange({ ...settings, collapsedGroups: stillCollapsed });
+    }
+    // issuesByGroup identity changes every render; the length check above keeps
+    // this from writing on every pass.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
+
   // Empty groups are removed when "Show empty columns" is off. A manual hide moves
   // any of the remaining groups into the "Hidden" panel.
   const baseGroups = settings.showEmptyGroups
@@ -145,7 +161,7 @@ export default function FlatBoard({
         onClick={() => selection.isSelecting && selection.clear()}
       >
         {orderedGroups.map((group) =>
-          collapsedSet.has(group.key) ? (
+          isCollapsed(group.key) ? (
             <CollapsedColumn
               key={group.key}
               group={group}
