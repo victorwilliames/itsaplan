@@ -183,7 +183,6 @@ const COMMON: Omit<ViewSettings, 'group' | 'subgroup' | 'properties' | 'sort'> =
 // out by date and show none.
 const DEFAULT_PROPERTIES: Record<WorkItemsView, DisplayProperty[]> = {
   kanban: [
-    'id',
     'status',
     'statusAge',
     'priority',
@@ -191,6 +190,7 @@ const DEFAULT_PROPERTIES: Record<WorkItemsView, DisplayProperty[]> = {
     'dueDate',
     'labels',
     'assignee',
+    'delegate',
     'created',
     'updated',
   ],
