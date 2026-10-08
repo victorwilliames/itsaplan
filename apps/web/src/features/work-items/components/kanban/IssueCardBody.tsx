@@ -192,29 +192,32 @@ export function IssueCardBody({
 
       {footerShown && (
         <div className="mt-2 flex items-center justify-between gap-2">
-          <span className="text-[11px] text-muted-foreground/70">
-            {has('created') && t('createdOn', { date: formatShortDate(issue.createdAt) })}
-            {has('created') && has('updated') && ' · '}
-            {has('updated') && t('updatedOn', { date: formatShortDate(issue.updatedAt) })}
-          </span>
-          {/* Negative spacing so a delegate and an assignee shown together
-              overlap; the ring in the card color keeps them separated. */}
-          <div className="flex items-center -space-x-1.5">
-            {has('delegate') && delegate && (
-              <DelegateAvatar
-                name={delegate.name}
-                image={delegate.image}
-                className="ring-2 ring-[var(--kanban-card)]"
-              />
-            )}
+          <span className="flex min-w-0 items-center gap-2">
             {has('assignee') && assignee && (
               <AssigneeAvatar
                 name={assignee.name}
                 image={assignee.image}
-                className="ring-2 ring-[var(--kanban-card)]"
+                className={cn(
+                  'shrink-0 ring-2 ring-[var(--kanban-card)]',
+                  // Fork customization: when an agent is delegated, the
+                  // responsible fades to signal the agent is doing the work.
+                  has('delegate') && delegate && 'opacity-50',
+                )}
               />
             )}
-          </div>
+            <span className="truncate text-[11px] text-muted-foreground/70">
+              {has('created') && t('createdOn', { date: formatShortDate(issue.createdAt) })}
+              {has('created') && has('updated') && ' · '}
+              {has('updated') && t('updatedOn', { date: formatShortDate(issue.updatedAt) })}
+            </span>
+          </span>
+          {has('delegate') && delegate && (
+            <DelegateAvatar
+              name={delegate.name}
+              image={delegate.image}
+              className="shrink-0 ring-2 ring-[var(--kanban-card)]"
+            />
+          )}
         </div>
       )}
 
