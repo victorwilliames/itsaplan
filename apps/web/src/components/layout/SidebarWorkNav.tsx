@@ -9,7 +9,6 @@ import {
   ChevronDown,
   Inbox,
   LayoutDashboard,
-  ListTodo,
   RefreshCw,
   Server,
   Settings,
@@ -55,11 +54,10 @@ import SidebarNavSubmenu, {
 // The top sidebar group. An entry appears only when its project feature is on and
 // the user may read the section.
 //
-// FORK (APPLANO): reorganizado a pedido do dono —
-// - "Tarefas" agrupa o quadro, as views favoritas, Epics e Ciclos (fechado por padrão);
-// - "Ver mais" agrupa TUDO o resto (Documentos, Notas, Time de IA, Configuração);
-// - rótulos em PT-BR direto no código (fork-only).
-// SidebarAiTeamNav e SidebarConfigNav não são mais renderizados (ver SidebarMainNav).
+// FORK (APPLANO): reorganizado a pedido do dono — menu limpo com Quadro e views
+// direto; "Ver mais" (grudado embaixo) agrupa TODO o resto (Epics, Ciclos,
+// Documentos, Notas, Time de IA, Configuração, Docs da API, Servidor MCP, Modo god).
+// Rótulos em PT-BR direto no código (fork-only).
 export default function SidebarWorkNav({
   projectKey,
   projectId,
@@ -98,7 +96,8 @@ export default function SidebarWorkNav({
   const showInitiatives = features.initiatives && can('initiatives', 'read');
   const showCycles = features.cycles && can('cycles', 'read');
 
-  // "Tarefas": o quadro, as favoritas, e os agrupamentos (Epics, Ciclos).
+  // Tarefas: o quadro e as favoritas, direto no menu (sem colapso).
+  // FORK (APPLANO): Epics e Ciclos foram para o "Ver mais".
   const tarefasItems: SidebarNavSubmenuItem[] = [];
   if (projectKey) {
     tarefasItems.push({
@@ -117,8 +116,13 @@ export default function SidebarWorkNav({
         active: pathname === viewPath(projectKey, v.id),
       });
     }
+  }
+
+  // "Ver mais": o resto, fora do caminho diário — com as categorias de antes.
+  const verMaisItems: SidebarNavSubmenuItem[] = [];
+  if (projectKey) {
     if (showInitiatives) {
-      tarefasItems.push({
+      verMaisItems.push({
         key: 'epics',
         href: initiativesPath(projectKey),
         icon: Target,
@@ -127,7 +131,7 @@ export default function SidebarWorkNav({
       });
     }
     if (showCycles) {
-      tarefasItems.push({
+      verMaisItems.push({
         key: 'cycles',
         href: cyclesPath(projectKey),
         icon: RefreshCw,
@@ -135,12 +139,6 @@ export default function SidebarWorkNav({
         active: onCycles,
       });
     }
-  }
-
-  // "Ver mais": o resto, fora do caminho diário — documentos, notas,
-  // time de IA e configuração.
-  const verMaisItems: SidebarNavSubmenuItem[] = [];
-  if (projectKey) {
     if (features.documents && can('documents', 'read')) {
       verMaisItems.push({
         key: 'documents',
@@ -166,6 +164,7 @@ export default function SidebarWorkNav({
         icon: s.icon,
         label: sectionText(s.slug).label,
         active: pathname.endsWith(`/agents/${s.slug}`),
+        group: t('aiTeam'),
       });
     }
     if (can(AI_AGENTS_SECTION.resource, 'read')) {
@@ -175,6 +174,7 @@ export default function SidebarWorkNav({
         icon: AI_AGENTS_SECTION.icon,
         label: sectionText(AI_AGENTS_SECTION.slug).label,
         active: pathname.endsWith('/agents'),
+        group: t('aiTeam'),
       });
     }
     if (can('members_manage', 'read')) {
@@ -184,6 +184,7 @@ export default function SidebarWorkNav({
         icon: Users,
         label: t('members'),
         active: pathname.includes('/members'),
+        group: t('configuration'),
       });
     }
     if (isMember) {
@@ -193,6 +194,7 @@ export default function SidebarWorkNav({
         icon: Bell,
         label: t('notifications'),
         active: pathname === notificationsPath(projectKey),
+        group: t('configuration'),
       });
     }
     if (firstHref) {
@@ -202,6 +204,7 @@ export default function SidebarWorkNav({
         icon: Settings,
         label: t('projectSettings'),
         active: false,
+        group: t('configuration'),
       });
     }
     // FORK (APPLANO): Docs da API, Servidor MCP e Modo god saíram do rodapé
@@ -253,14 +256,17 @@ export default function SidebarWorkNav({
                 disabled={disabled}
               />
             )}
-            {!disabled && tarefasItems.length > 0 && (
-              <SidebarNavSubmenu
-                icon={ListTodo}
-                label="Tarefas"
-                items={tarefasItems}
-                defaultOpen={false}
-              />
-            )}
+            {!disabled &&
+              tarefasItems.map((item) => (
+                <SidebarNavItem
+                  key={item.key}
+                  href={item.href}
+                  icon={item.icon}
+                  label={item.label}
+                  active={item.active}
+                  disabled={disabled}
+                />
+              ))}
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>

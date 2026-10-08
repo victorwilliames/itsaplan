@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import Link from 'next/link';
 import type { LucideIcon } from 'lucide-react';
 import {
@@ -5,6 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
@@ -31,14 +33,28 @@ export default function SidebarNavSubmenuMenu({
         </DropdownMenuTrigger>
         <DropdownMenuContent className="min-w-48 rounded-lg" align="start" side="right">
           <DropdownMenuLabel className="text-xs text-muted-foreground">{label}</DropdownMenuLabel>
-          {items.map((item) => (
-            <DropdownMenuItem key={item.key} asChild className="gap-2">
-              <Link href={item.href}>
-                <item.icon />
-                <span>{item.label}</span>
-              </Link>
-            </DropdownMenuItem>
-          ))}
+          {items.map((item, idx) => {
+            // FORK (APPLANO): separa os grupos no dropdown também.
+            const showGroup = item.group && (idx === 0 || items[idx - 1]?.group !== item.group);
+            return (
+              <Fragment key={item.key}>
+                {showGroup && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel className="text-xs text-muted-foreground">
+                      {item.group}
+                    </DropdownMenuLabel>
+                  </>
+                )}
+                <DropdownMenuItem asChild className="gap-2">
+                  <Link href={item.href}>
+                    <item.icon />
+                    <span>{item.label}</span>
+                  </Link>
+                </DropdownMenuItem>
+              </Fragment>
+            );
+          })}
         </DropdownMenuContent>
       </DropdownMenu>
     </SidebarMenuItem>

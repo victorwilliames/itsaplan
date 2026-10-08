@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import Link from 'next/link';
 import { ChevronRight, type LucideIcon } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -40,16 +41,27 @@ export default function SidebarNavSubmenuCollapsible({
         </CollapsibleTrigger>
         <CollapsibleContent>
           <SidebarMenuSub>
-            {items.map((item) => (
-              <SidebarMenuSubItem key={item.key}>
-                <SidebarMenuSubButton asChild isActive={item.active}>
-                  <Link href={item.href}>
-                    <item.icon />
-                    <span>{item.label}</span>
-                  </Link>
-                </SidebarMenuSubButton>
-              </SidebarMenuSubItem>
-            ))}
+            {items.map((item, idx) => {
+              // FORK (APPLANO): mostra o cabeçalho do grupo quando ele muda.
+              const showGroup = item.group && (idx === 0 || items[idx - 1]?.group !== item.group);
+              return (
+                <Fragment key={item.key}>
+                  {showGroup && (
+                    <li className="px-2 pt-2 pb-1 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                      {item.group}
+                    </li>
+                  )}
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton asChild isActive={item.active}>
+                      <Link href={item.href}>
+                        <item.icon />
+                        <span>{item.label}</span>
+                      </Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                </Fragment>
+              );
+            })}
           </SidebarMenuSub>
         </CollapsibleContent>
       </SidebarMenuItem>

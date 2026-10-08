@@ -11,6 +11,8 @@ export type SidebarNavSubmenuItem = {
   icon: LucideIcon;
   label: string;
   active: boolean;
+  // FORK (APPLANO): grupo opcional para categorizar os itens dentro do submenu.
+  group?: string;
 };
 
 // A sidebar item holding a sub-list of links. Collapsed to icons there is no room
